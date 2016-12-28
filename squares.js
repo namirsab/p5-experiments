@@ -1,17 +1,18 @@
-var song;
-var fft;
+let song;
+let fft;
 const NUM_OF_TILES = 32;
 const MAX = NUM_OF_TILES - 1;
 const HALF = (NUM_OF_TILES / 2) - 1;
-var graphics;
+let graphics;
+
 
 function preload() {
     song = new p5.AudioIn();
-
 }
 
 function setup() {
     canvas = createCanvas(600, 600, P2D);
+
     fft = new p5.FFT();
     song.start();
     fft.setInput(song);
@@ -22,7 +23,6 @@ function setup() {
 function draw() {
     
     const spectrum = fft.analyze();
-    fft.smooth(0.8);
     const bassEnergy = fft.getEnergy('bass');
     const lowMidEnergy = fft.getEnergy('lowMid');
     const midEnergy = fft.getEnergy('mid');
@@ -31,16 +31,17 @@ function draw() {
     const tileWidth = width / NUM_OF_TILES;
     background(0);
     
-    
-
+    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: HALF, j: HALF }, tileWidth, energy: bassEnergy, mainColor: 'r' });
     renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: MAX, j: HALF }, tileWidth, energy: lowMidEnergy, mainColor: 'g'});
     renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: 0, j: HALF }, tileWidth, energy: lowMidEnergy, mainColor: 'g' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: HALF, j: MAX }, tileWidth, energy: trebleEnergy, mainColor: 'b' });
+    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: HALF, j: MAX }, tileWidth, energy: midEnergy, mainColor: 'b' });
+    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: 0, j: MAX }, tileWidth, energy: trebleEnergy, mainColor: 'b' });
+    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: MAX, j: MAX }, tileWidth, energy: trebleEnergy, mainColor: 'b' });
+    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: 0, j: 0 }, tileWidth, energy: trebleEnergy, mainColor: 'b' });
+    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: MAX, j: 0 }, tileWidth, energy: trebleEnergy, mainColor: 'b' });
     renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: HALF, j: 0 }, tileWidth, energy: midEnergy, mainColor: 'b' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: 0, j: 0 }, tileWidth, energy: bassEnergy, mainColor: 'r' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: MAX, j: MAX }, tileWidth, energy: bassEnergy, mainColor: 'r' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: 0, j: MAX }, tileWidth, energy: bassEnergy, mainColor: 'r' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: MAX, j: 0 }, tileWidth, energy: bassEnergy, mainColor: 'r' });
+    drawTiles();
+    tileMatrix = [];
     
 }
 
