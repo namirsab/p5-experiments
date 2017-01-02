@@ -16,6 +16,7 @@ function setup() {
     fft = new p5.FFT();
     song.start();
     fft.setInput(song);
+    Tiles.initialize({ NUM_OF_TILES, TILE_WIDTH: width / NUM_OF_TILES });
 }
 
 
@@ -28,20 +29,22 @@ function draw() {
     const midEnergy = fft.getEnergy('mid');
     const highMidEnergy = fft.getEnergy('highMid');
     const trebleEnergy = fft.getEnergy('treble');
-    const tileWidth = width / NUM_OF_TILES;
     background(0);
     
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: HALF, j: HALF }, tileWidth, energy: bassEnergy, mainColor: 'r' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: MAX, j: HALF }, tileWidth, energy: lowMidEnergy, mainColor: 'g'});
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: 0, j: HALF }, tileWidth, energy: lowMidEnergy, mainColor: 'g' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: HALF, j: MAX }, tileWidth, energy: midEnergy, mainColor: 'b' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: 0, j: MAX }, tileWidth, energy: trebleEnergy, mainColor: 'b' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: MAX, j: MAX }, tileWidth, energy: trebleEnergy, mainColor: 'b' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: 0, j: 0 }, tileWidth, energy: trebleEnergy, mainColor: 'b' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: MAX, j: 0 }, tileWidth, energy: trebleEnergy, mainColor: 'b' });
-    renderTiles({ numOfTiles: NUM_OF_TILES, center: { i: HALF, j: 0 }, tileWidth, energy: midEnergy, mainColor: 'b' });
-    drawTiles();
-    tileMatrix = [];
-    
+    // console.time('calculate');
+    Tiles.addGenerator({ center: { i: HALF, j: HALF }, energy: bassEnergy, mainColor: 'r' });
+    Tiles.addGenerator({ center: { i: MAX, j: HALF }, energy: lowMidEnergy, mainColor: 'g'});
+    Tiles.addGenerator({ center: { i: 0, j: HALF }, energy: lowMidEnergy, mainColor: 'g' });
+    Tiles.addGenerator({ center: { i: HALF, j: MAX }, energy: midEnergy, mainColor: 'b' });
+    Tiles.addGenerator({ center: { i: 0, j: MAX }, energy: trebleEnergy, mainColor: 'b' });
+    Tiles.addGenerator({ center: { i: MAX, j: MAX }, energy: trebleEnergy, mainColor: 'b' });
+    Tiles.addGenerator({ center: { i: 0, j: 0 }, energy: trebleEnergy, mainColor: 'b' });
+    Tiles.addGenerator({ center: { i: MAX, j: 0 }, energy: trebleEnergy, mainColor: 'b' });
+    Tiles.addGenerator({ center: { i: HALF, j: 0 }, energy: midEnergy, mainColor: 'b' });
+    // console.timeEnd('calculate');
+    // console.time('draw');
+    Tiles.draw();
+    // console.timeEnd('draw');
+    Tiles.clear();    
 }
 
