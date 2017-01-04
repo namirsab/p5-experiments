@@ -15,9 +15,10 @@ const Tiles = (function Tiles() {
             const g = random(0, energy - 100);
             const b = random(0, energy - 100);
             const distanceToCenter = distance({ pointA: { x: i, y: j }, pointB: { x: center.i, y: center.j } });
-            const relaxingFactor = map(distanceToCenter, 0, 16, 0, 6);
+            const relaxingFactor = map(distanceToCenter, 0, 16, 0, 3);
             let paintColor;
             const previousColor = tileMatrix[i][j].color;
+            const previousEnergy = tileMatrix[i][j].energy;
             switch (mainColor) {
                 case 'r':
                     paintColor = color(energy / relaxingFactor, g / relaxingFactor, b / relaxingFactor);
@@ -29,9 +30,12 @@ const Tiles = (function Tiles() {
                     paintColor = color(r / relaxingFactor, g / relaxingFactor, energy / relaxingFactor);
                     break;
             }
+            
+            if (previousColor) {
+                paintColor = lerpColor(paintColor, previousColor, energy > previousEnergy ? 0.3: 0.7);
+            }
 
-
-            tileMatrix[i][j] = tile2({ x, y, w: tileWidth, color: paintColor });
+            tileMatrix[i][j] = tile2({ x, y, w: tileWidth, color: paintColor , energy});
         }
     }
 
@@ -104,12 +108,13 @@ const Tiles = (function Tiles() {
     }
 
 
-    function tile2({ x, y, w, color, gr }) {
+    function tile2({ x, y, w, color, gr, energy }) {
         return {
             x,
             y,
             w,
-            color
+            color,
+            energy
         }
     }
 
@@ -128,7 +133,6 @@ const Tiles = (function Tiles() {
 
     function clear() {
         tileMatrix = [];
-        generators = [];
     }
 
     function initialize({ NUM_OF_TILES, TILE_WIDTH }) {
@@ -136,8 +140,28 @@ const Tiles = (function Tiles() {
         tileWidth = TILE_WIDTH;
     }
 
+    function getGeneratorId(i, j) {
+        const generatorId = 
+            generators.findIndex(generator =>  {
+                const center = generator.center;
+                return i === center.i && j === center.j;
+            });
+
+        return generatorId < 0 ? null : generatorId;
+    }
+
+    function updateGenerator(id, changes) {
+        generators[id] = Object.assign(
+            {},
+            generators[id],
+            changes
+        )
+    }
+
     return {
         addGenerator,
+        getGeneratorId,
+        updateGenerator,
         draw,
         clear,
         initialize
