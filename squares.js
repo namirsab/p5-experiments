@@ -4,6 +4,7 @@ const NUM_OF_TILES = 32;
 const MAX = NUM_OF_TILES - 1;
 const HALF = (NUM_OF_TILES / 2) - 1;
 let graphics;
+var radioSlider;
 
 
 function preload() {
@@ -16,12 +17,19 @@ function setup() {
     canvas.mouseMoved(drag);
     canvas.mouseReleased(stopDrag);
 
+    radioSlider = createSlider(0, NUM_OF_TILES, NUM_OF_TILES/2, 1);
+
     fft = new p5.FFT();
     song.start();
     fft.setInput(song);
     Tiles.initialize({ NUM_OF_TILES, TILE_WIDTH: width / NUM_OF_TILES });
 
-    Tiles.addGenerator({ center: { i: HALF, j: HALF }, energy: 0, mainColor: 'r' });
+    Tiles.addGenerator({
+        center: { i: HALF, j: HALF },
+        energy: 0,
+        mainColor: 'r',
+        radio: 30,
+    });
     Tiles.addGenerator({ center: { i: MAX, j: HALF }, energy: 0, mainColor: 'g'});
     Tiles.addGenerator({ center: { i: 0, j: HALF }, energy: 0, mainColor: 'g' });
     Tiles.addGenerator({ center: { i: HALF, j: MAX }, energy: 0, mainColor: 'b' });
@@ -35,18 +43,20 @@ function setup() {
 let draggedGeneratorId = null;
 
 function draw() {
-    
+
     const spectrum = fft.analyze();
     const bassEnergy = fft.getEnergy('bass');
     const lowMidEnergy = fft.getEnergy('lowMid');
     const midEnergy = fft.getEnergy('mid');
     const highMidEnergy = fft.getEnergy('highMid');
     const trebleEnergy = fft.getEnergy('treble');
-    background(0);
-    
-    // console.time('calculate');
 
-    Tiles.updateGenerator(0, { energy: bassEnergy });
+    background(0);
+
+    // console.time('calculate');
+    const radio = radioSlider.value();
+
+    Tiles.updateGenerator(0, { energy: bassEnergy, radio });
     Tiles.updateGenerator(1, { energy: lowMidEnergy });
     Tiles.updateGenerator(2, { energy: lowMidEnergy });
     Tiles.updateGenerator(3, { energy: midEnergy });
@@ -60,7 +70,7 @@ function draw() {
     // console.time('draw');
     Tiles.draw();
     // console.timeEnd('draw');
-    Tiles.clear();    
+    Tiles.clear();
     console.log(draggedGeneratorId);
 
 }
@@ -95,9 +105,9 @@ function stopDrag() {
 function keyPressed() {
     if (draggedGeneratorId >= 0) {
         let mainColor;
-        
+
         switch(keyCode) {
-            case 82: 
+            case 82:
                 mainColor = 'r';
                 break;
             case 71:
@@ -114,4 +124,3 @@ function keyPressed() {
 
     }
 }
-

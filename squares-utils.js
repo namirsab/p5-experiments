@@ -4,12 +4,12 @@ const Tiles = (function Tiles() {
     let generators = [];
     let tileMatrix = [];
 
-    function addGenerator({ center, energy, mainColor }) {
-        generators.push({ center, energy, mainColor });
+    function addGenerator({ center, energy, mainColor, radio = numOfTiles / 2 }) {
+        generators.push({ center, energy, mainColor, radio});
     }
 
-    function calculateTileParameters({ center, energy, mainColor, i, j, x, y }) {
-        const threshold = map(energy, 0, 255, 0, numOfTiles / 2);
+    function calculateTileParameters({ center, energy, mainColor, radio, i, j, x, y }) {
+        const threshold = map(energy, 0, 255, 0, radio);
         if (isCloseToCenter(i, j, center, threshold)) {
             const r = random(0, energy - 100);
             const g = random(0, energy - 100);
@@ -30,7 +30,7 @@ const Tiles = (function Tiles() {
                     paintColor = color(r / relaxingFactor, g / relaxingFactor, energy / relaxingFactor);
                     break;
             }
-            
+
             if (previousColor) {
                 paintColor = lerpColor(paintColor, previousColor, energy > previousEnergy ? 0.3: 0.7);
             }
@@ -67,7 +67,7 @@ const Tiles = (function Tiles() {
                 .filter(tileElement => Object.keys(tileElement).length !== 0)
                 .forEach(tileElement => {
                     if (tileElement.color._getBrightness() > 1.0) {
-                        tile(tileElement);
+                        renderTile(tileElement);
                     }
                 });
         });
@@ -119,7 +119,7 @@ const Tiles = (function Tiles() {
     }
 
 
-    function tile({ x, y, w, color, gr}) {
+    function renderTile({ x, y, w, color, gr}) {
         if (!gr) {
             fill(color);
             noStroke();
@@ -141,7 +141,7 @@ const Tiles = (function Tiles() {
     }
 
     function getGeneratorId(i, j) {
-        const generatorId = 
+        const generatorId =
             generators.findIndex(generator =>  {
                 const center = generator.center;
                 return i === center.i && j === center.j;
@@ -168,8 +168,3 @@ const Tiles = (function Tiles() {
     }
 
 })();
-
-
-
-
-
