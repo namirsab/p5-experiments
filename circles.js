@@ -50,7 +50,7 @@ function setup() {
     }));
 
     peakFountain = new Fountain(null, Object.assign({}, t, {
-        colors: ['yellow'],
+        colors: [color(0,255,0, 255)],
         x: 0.5,
         y: 0.5,
         rate: [1,300],
