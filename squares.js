@@ -124,3 +124,7 @@ function keyPressed() {
 
     }
 }
+
+function mousePressed() {
+    userStartAudio();
+}
