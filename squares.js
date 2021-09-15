@@ -7,10 +7,6 @@ let graphics;
 var radioSlider;
 
 
-function preload() {
-    song = new p5.AudioIn();
-}
-
 function setup() {
     canvas = createCanvas(600, 600, P2D);
     canvas.mousePressed(startDrag);
@@ -20,6 +16,7 @@ function setup() {
     radioSlider = createSlider(0, NUM_OF_TILES, NUM_OF_TILES/2, 1);
 
     fft = new p5.FFT();
+    song = new p5.AudioIn();
     song.start();
     fft.setInput(song);
     Tiles.initialize({ NUM_OF_TILES, TILE_WIDTH: width / NUM_OF_TILES });
