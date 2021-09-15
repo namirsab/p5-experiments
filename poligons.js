@@ -8,12 +8,6 @@ var peakFountain;
 var peakFountain2;
 var peakDetect;
 
-function preload() {
-    song = new p5.AudioIn();
-    maxWidth = displayWidth - 100;
-    maxHeight = displayHeight  - 110;
-
-}
 
 function randomPolygon(fountain, particle) {
     var x = particle.location.x;
@@ -32,6 +26,10 @@ function randomPolygon(fountain, particle) {
 }
 
 function setup() {
+    song = new p5.AudioIn();
+    maxWidth = displayWidth - 100;
+    maxHeight = displayHeight  - 110;
+
     canvas = createCanvas(maxWidth, maxHeight, P2D);
     // Maptastic(canvas.id());
     print(canvas);
@@ -109,4 +107,8 @@ function renderBackground(maxWidth, maxHeight, bassEnergy) {
     vertex(maxWidth, maxHeight);
     endShape(CLOSE);
     
+}
+
+function mousePressed() {
+    userStartAudio();
 }
