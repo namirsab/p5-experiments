@@ -10,16 +10,6 @@ var peakDetect;
 var imgCumbia;
 var mask;
 
-function preload() {
-    song = new p5.AudioIn();
-    maxWidth = displayWidth - 100;
-    maxHeight = displayHeight  - 110;
-
-    imgCumbia = loadImage('./assets/mascara.png');
-    mask = loadImage('./assets/cnb.png');
-    
-}
-
 var prevParticle = { location: { x: 0, y: 0 }};
 function crazyLines(fountain, particle) {
 
@@ -47,6 +37,12 @@ function randomPolygon(fountain, particle) {
 }
 
 function setup() {
+    song = new p5.AudioIn();
+    maxWidth = displayWidth - 100;
+    maxHeight = displayHeight  - 110;
+
+    imgCumbia = loadImage('./assets/mascara.png');
+    mask = loadImage('./assets/cnb.png');
     imageMode(CENTER);
     mask.mask(imgCumbia);
     canvas = createCanvas(maxWidth, maxHeight, P2D);
@@ -153,4 +149,8 @@ function renderCircle(color, energy, { x, y }, fountain) {
     fill(color);
     const size = map(energy, 0, 255, 0, maxHeight/2);
     ellipse(x, y, size + 100, size);
+}
+
+function mousePressed() {
+    userStartAudio();
 }

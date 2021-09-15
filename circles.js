@@ -8,13 +8,6 @@ var peakFountain;
 var peakFountain2;
 var peakDetect;
 
-function preload() {
-    song = new p5.AudioIn();
-    maxWidth = displayWidth - 100;
-    maxHeight = displayHeight  - 110;
-
-}
-
 var prevParticle = { location: { x: 0, y: 0 }};
 function crazyLines(fountain, particle) {
 
@@ -25,6 +18,9 @@ function crazyLines(fountain, particle) {
 }
 
 function setup() {
+    song = new p5.AudioIn();
+    maxWidth = displayWidth - 100;
+    maxHeight = displayHeight  - 110;
     canvas = createCanvas(maxWidth, maxHeight, P2D);
     // Maptastic(canvas.id());
     print(canvas);
@@ -121,4 +117,8 @@ function renderCircle(color, energy, { x, y }, fountain) {
     fill(color);
     const size = map(energy, 0, 255, 10, maxHeight/2);
     ellipse(x, y, size, size);
+}
+
+function mousePressed() {
+    userStartAudio();
 }

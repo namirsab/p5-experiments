@@ -3,16 +3,13 @@ var fft;
 var canvas;
 var barWidth;
 
-function preload() {
-    song = new p5.AudioIn();
-
-}
 
 function setup() {
     canvas = createCanvas(displayWidth - 100, displayHeight - 100, P2D);
     // Maptastic(canvas.id());
     print(canvas);
     fft = new p5.FFT();
+    song = new p5.AudioIn();
     song.start();
     fft.setInput(song);
 
@@ -70,4 +67,8 @@ function renderWaveForm() {
         vertex(i*2, map(waveform[i], -1, 1, height, 0) );
     }
     endShape();
+}
+
+function mousePressed() {
+    userStartAudio();
 }
